@@ -370,8 +370,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 555725d48e9051a4bb6b8d45178c2fdd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   projectionSurfaceType: 0
   overlayType: 1
   compositionDepth: 0
@@ -567,8 +567,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   m_UsePipelineSettings: 1
   m_AdditionalLightsShadowResolutionTier: 2
   m_CustomShadowLayers: 0
@@ -834,6 +834,7 @@ GameObject:
   - component: {fileID: 740328627}
   - component: {fileID: 740328626}
   - component: {fileID: 740328625}
+  - component: {fileID: 740328631}
   m_Layer: 0
   m_Name: '[BuildingBlock] Object Detection'
   m_TagString: Untagged
@@ -851,8 +852,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d6b96759ad368794da78dff0b7f67f0e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
 --- !u!114 &740328626
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -863,8 +864,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 71a155ece80369d4e99bdaf5e59169b5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   _occlusionShadersMode: 2
   _removeHands: 0
   CustomTrackingSpace: {fileID: 0}
@@ -948,6 +949,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &740328631
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 740328624}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b97f7854d9074b34a8a43a57551cd808, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  objectDetectionAgent: {fileID: 740328628}
+  objectDetectionVisualizer: {fileID: 740328627}
 --- !u!1 &754636563
 GameObject:
   m_ObjectHideFlags: 0
@@ -2420,6 +2435,9 @@ GameObject:
   - component: {fileID: 2100000002}
   - component: {fileID: 2100000003}
   - component: {fileID: 2100000004}
+  - component: {fileID: 2100000005}
+  - component: {fileID: 2100000006}
+  - component: {fileID: 2100000007}
   m_Layer: 0
   m_Name: Grid System
   m_TagString: Untagged
@@ -2454,7 +2472,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a165b1df1ea08c341a936cfe54dc8af2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _gridSettings: {fileID: 11400000, guid: ff976e1d5beaf4d4a8731282b115756c, type: 2}
+  _gridSettings: {fileID: 0}
 --- !u!114 &2100000003
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2480,10 +2498,60 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefabToPlace: {fileID: 5652687432088386100, guid: 79c2ab392f350e6478d13a8290dc79fc, type: 3}
-  enterPlacementOnStart: 1
+  enterPlacementOnStart: 0
   confirmOnPrimaryRelease: 0
   confirmOnEnter: 1
-  startPlacementOnSpace: 1
+  startPlacementOnSpace: 0
+--- !u!114 &2100000005
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2100000000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c42f82b785ba7764f8d24f21378a59e6, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  loadSceneFromDeviceIfNeeded: 1
+  requestSceneCaptureIfNoDataFound: 1
+  createMRUKIfMissing: 1
+--- !u!114 &2100000006
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2100000000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02c35986dc8d2f641b1b2b4c2ee2c73a, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  floorProvider: {fileID: 2100000005}
+  gridManager: {fileID: 2100000002}
+  gridSettingsTemplate: {fileID: 11400000, guid: ff976e1d5beaf4d4a8731282b115756c, type: 2}
+  createGridManagerIfMissing: 1
+  displayGridAfterSetup: 1
+  floorNormalOffset: 0.001
+--- !u!114 &2100000007
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2100000000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d26430211bf055e4ebc3cc91889adc57, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  detectionAdapter: {fileID: 740328631}
+  floorGridBinder: {fileID: 2100000006}
+  stainPrefab: {fileID: 5652687432088386100, guid: 79c2ab392f350e6478d13a8290dc79fc, type: 3}
+  objectAlignment: 0
+  alignPrefabYawToGrid: 1
 --- !u!1 &2100000100
 GameObject:
   m_ObjectHideFlags: 0

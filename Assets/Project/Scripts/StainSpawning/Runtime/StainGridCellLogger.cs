@@ -17,12 +17,12 @@ namespace MRStainCleaning.StainSpawning
         {
             if (detectionAdapter == null)
             {
-                detectionAdapter = FindObjectOfType<ObjectDetectionWorldAdapter>();
+                detectionAdapter = FindFirstObjectByType<ObjectDetectionWorldAdapter>();
             }
 
             if (floorGridBinder == null)
             {
-                floorGridBinder = FindObjectOfType<FloorGridBinder>();
+                floorGridBinder = FindFirstObjectByType<FloorGridBinder>();
             }
 
             if (detectionAdapter == null)

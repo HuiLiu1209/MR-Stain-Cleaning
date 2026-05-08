@@ -42,7 +42,7 @@ namespace MRStainCleaning.Grid
         {
             if (floorProvider == null)
             {
-                floorProvider = FindObjectOfType<MRUKFloorProvider>();
+                floorProvider = FindFirstObjectByType<MRUKFloorProvider>();
             }
 
             if (gridSettingsTemplate == null && gridManager != null)
@@ -138,12 +138,11 @@ namespace MRStainCleaning.Grid
 
             if (gridManager.IsSetup)
             {
-                Debug.LogWarning("[Grid] GridManager was already set up before floor data arrived. The grid will be aligned to the floor, but its cell counts keep the existing setup.");
+                Debug.LogWarning("[Grid] Assigned GridManager was already set up before floor data arrived. Creating a runtime floor GridManager so cell counts match the floor settings.");
+                gridManager = CreateRuntimeGridManager();
             }
-            else
-            {
-                gridManager.Setup(RuntimeGridSettings);
-            }
+
+            gridManager.Setup(RuntimeGridSettings);
 
             Vector3 floorOffsetDirection = Vector3.Dot(floorData.NormalWorld, Vector3.up) >= 0f
                 ? floorData.NormalWorld.normalized
@@ -173,9 +172,14 @@ namespace MRStainCleaning.Grid
                 return;
             }
 
+            gridManager = CreateRuntimeGridManager();
+        }
+
+        private GridManager CreateRuntimeGridManager()
+        {
             GameObject gridObject = new("Floor Grid Runtime");
             gridObject.transform.SetParent(transform, false);
-            gridManager = gridObject.AddComponent<GridManager>();
+            return gridObject.AddComponent<GridManager>();
         }
 
         private static GridSettings CreateRuntimeGridSettings(GridSettings template, FloorPlaneData floorData)
