@@ -41,6 +41,10 @@ namespace MRStainCleaning.StainSpawning
         [SerializeField]
         private bool forcePlacedPrefabBottomToGridPlane = true;
 
+        [SerializeField]
+        [Min(0)]
+        private int duplicateCellSuppressionRadius = 1;
+
         private readonly HashSet<Vector2Int> spawnedCells = new();
         private readonly HashSet<Vector2Int> reservedCells = new();
         private readonly Queue<SpawnRequest> spawnQueue = new();
@@ -95,9 +99,9 @@ namespace MRStainCleaning.StainSpawning
                 return;
             }
 
-            if (reservedCells.Contains(cellIndex))
+            if (TryFindReservedCellNear(cellIndex, out Vector2Int reservedCell))
             {
-                Debug.Log($"[StainSpawn] Stain prefab already exists for cell {cellIndex}.");
+                Debug.Log($"[StainSpawn] Stain prefab already exists near cell {cellIndex}. ReservedCell={reservedCell}.");
                 return;
             }
 
@@ -149,7 +153,7 @@ namespace MRStainCleaning.StainSpawning
                 ScalePrefabToCell(stainInstance);
             }
 
-            if (alignPrefabBottomToGrid)
+            if (alignPrefabBottomToGrid && !forcePlacedPrefabBottomToGridPlane)
             {
                 ApplyGridHeightFromPrefabBottom(stainInstance);
             }
@@ -174,6 +178,8 @@ namespace MRStainCleaning.StainSpawning
                 yield break;
             }
 
+            ForcePrefabXZToCellCenter(stainInstance, cellIndex);
+
             if (forcePlacedPrefabBottomToGridPlane)
             {
                 ForcePrefabBottomToGridPlane(stainInstance, cellIndex);
@@ -188,6 +194,27 @@ namespace MRStainCleaning.StainSpawning
                 $"Cell={cellIndex}, DetectionWorld={detectionWorldPosition}, CellCenter={cellCenterWorld}, World={stainInstance.transform.position}.");
 
             placementCompleted?.Invoke(true);
+        }
+
+        private bool TryFindReservedCellNear(Vector2Int cellIndex, out Vector2Int reservedCell)
+        {
+            int radius = Mathf.Max(0, duplicateCellSuppressionRadius);
+
+            for (int x = cellIndex.x - radius; x <= cellIndex.x + radius; x++)
+            {
+                for (int y = cellIndex.y - radius; y <= cellIndex.y + radius; y++)
+                {
+                    Vector2Int nearbyCell = new(x, y);
+                    if (reservedCells.Contains(nearbyCell))
+                    {
+                        reservedCell = nearbyCell;
+                        return true;
+                    }
+                }
+            }
+
+            reservedCell = default;
+            return false;
         }
 
         private Quaternion GetInitialPrefabRotation()
@@ -260,6 +287,20 @@ namespace MRStainCleaning.StainSpawning
             }
 
             gridHeightPositioner.GridHeight = bottomLocalY;
+        }
+
+        private void ForcePrefabXZToCellCenter(GameObject stainInstance, Vector2Int cellIndex)
+        {
+            if (!floorGridBinder.TryGetCellCenterWorld(cellIndex, out Vector3 cellCenterWorld))
+            {
+                Debug.LogWarning($"[StainSpawn] Cannot force stain prefab XZ to cell center because cell {cellIndex} could not be resolved.");
+                return;
+            }
+
+            Vector3 position = stainInstance.transform.position;
+            position.x = cellCenterWorld.x;
+            position.z = cellCenterWorld.z;
+            stainInstance.transform.position = position;
         }
 
         private void ForcePrefabBottomToGridPlane(GameObject stainInstance, Vector2Int cellIndex)

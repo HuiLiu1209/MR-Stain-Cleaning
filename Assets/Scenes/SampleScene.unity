@@ -762,6 +762,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   objectDetectionAgent: {fileID: 740328628}
   objectDetectionVisualizer: {fileID: 740328627}
+  floorProvider: {fileID: 0}
+  passthroughCamera: {fileID: 0}
+  projectDetectionsByFloorRay: 1
+  boxCoordinateMode: 0
+  logProjectionDetails: 1
+  projectDetectionsToFloorPlane: 1
 --- !u!1 &827974917
 GameObject:
   m_ObjectHideFlags: 0
@@ -1588,6 +1594,11 @@ MonoBehaviour:
   stainPrefab: {fileID: 5652687432088386100, guid: 79c2ab392f350e6478d13a8290dc79fc, type: 3}
   objectAlignment: 0
   alignPrefabYawToGrid: 1
+  scalePrefabToCell: 1
+  cellFootprintScale: 0.9
+  alignPrefabBottomToGrid: 1
+  forcePlacedPrefabBottomToGridPlane: 1
+  duplicateCellSuppressionRadius: 1
 --- !u!1 &2100000100
 GameObject:
   m_ObjectHideFlags: 0

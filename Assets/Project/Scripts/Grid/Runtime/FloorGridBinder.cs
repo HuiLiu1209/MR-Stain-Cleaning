@@ -110,6 +110,15 @@ namespace MRStainCleaning.Grid
                 RuntimeGridSettings,
                 gridManager.RuntimeGridPosition);
 
+            if (FloorData.NormalWorld != default && Mathf.Abs(FloorData.NormalWorld.y) > 0.0001f)
+            {
+                Vector3 n = FloorData.NormalWorld.normalized;
+                float correctedY = FloorData.CenterWorld.y
+                    - ((n.x * (cellCenterWorld.x - FloorData.CenterWorld.x))
+                    + (n.z * (cellCenterWorld.z - FloorData.CenterWorld.z))) / n.y;
+                cellCenterWorld.y = correctedY;
+            }
+
             return true;
         }
 
