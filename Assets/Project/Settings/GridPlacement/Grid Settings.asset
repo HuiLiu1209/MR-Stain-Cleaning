@@ -18,7 +18,7 @@ MonoBehaviour:
   GridSizeRatio: {x: 1, y: 1}
   AmountOfCellsX: 10
   AmountOfCellsY: 10
-  DesiredCellSize: 0.25
+  DesiredCellSize: 0.5
   GridPosition: {x: 0, y: 0.001, z: 0}
   GridRotation: 0
   ParentToGrid: 1

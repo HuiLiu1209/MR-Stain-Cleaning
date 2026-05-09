@@ -33,6 +33,7 @@ namespace MRStainCleaning.Grid
         public GridManager GridManager => gridManager;
         public GridSettings RuntimeGridSettings { get; private set; }
         public FloorPlaneData FloorData { get; private set; }
+        public float CellSize => RuntimeGridSettings != null ? RuntimeGridSettings.CellSize : 0f;
 
         private void Awake()
         {
@@ -110,6 +111,12 @@ namespace MRStainCleaning.Grid
                 gridManager.RuntimeGridPosition);
 
             return true;
+        }
+
+        public bool TryGetCellSize(out float cellSize)
+        {
+            cellSize = CellSize;
+            return IsReady && cellSize > 0f;
         }
 
         public bool IsCellInGrid(Vector2Int cellIndex)
