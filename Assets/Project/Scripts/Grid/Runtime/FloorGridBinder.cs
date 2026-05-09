@@ -7,6 +7,10 @@ namespace MRStainCleaning.Grid
     [DisallowMultipleComponent]
     public sealed class FloorGridBinder : MonoBehaviour
     {
+        private const int GridSizeAndCellCountSizing = 0;
+        private const int CellSizeAndCellCountSizing = 1;
+        private const int GridSizeAndCellSizeSizing = 2;
+
         [SerializeField]
         private MRUKFloorProvider floorProvider;
 
@@ -188,10 +192,7 @@ namespace MRStainCleaning.Grid
             runtimeSettings.name = $"{template.name} Runtime";
             runtimeSettings.Key = $"{template.Key}_RuntimeFloor";
 
-            float desiredCellSize = template.DesiredCellSize > 0f ? template.DesiredCellSize : template.CellSize;
-            desiredCellSize = Mathf.Max(0.01f, desiredCellSize);
-
-            int cellsX = Mathf.Max(1, Mathf.CeilToInt(floorData.Width / desiredCellSize));
+            int cellsX = GetRuntimeCellCountX(template, floorData);
             float cellSize = floorData.Width / cellsX;
             int cellsY = Mathf.Max(1, Mathf.CeilToInt(floorData.Height / cellSize));
 
@@ -200,12 +201,41 @@ namespace MRStainCleaning.Grid
             runtimeSettings.AmountOfCellsX = cellsX;
             runtimeSettings.AmountOfCellsY = cellsY;
             runtimeSettings.GridSizeRatio = new Vector2Int(cellsX, cellsY);
-            runtimeSettings.DesiredCellSize = desiredCellSize;
+            runtimeSettings.DesiredCellSize = cellSize;
             runtimeSettings.GridPosition = floorData.CenterWorld;
             runtimeSettings.GridRotation = CalculateYawFromFloorRotation(floorData.RotationWorld);
             runtimeSettings.InitialPlacementCellIndex = new Vector2Int(cellsX / 2, cellsY / 2);
 
             return runtimeSettings;
+        }
+
+        private static int GetRuntimeCellCountX(GridSettings template, FloorPlaneData floorData)
+        {
+            // The MRUK floor remains the source of truth for world size. Grid Settings controls density.
+            switch (template.SizingOption)
+            {
+                case GridSizeAndCellCountSizing:
+                case CellSizeAndCellCountSizing:
+                    return Mathf.Max(1, template.AmountOfCellsX);
+                case GridSizeAndCellSizeSizing:
+                    return Mathf.Max(1, Mathf.CeilToInt(floorData.Width / GetTemplateCellSize(template)));
+                default:
+                    return Mathf.Max(1, template.AmountOfCellsX);
+            }
+        }
+
+        private static float GetTemplateCellSize(GridSettings template)
+        {
+            float cellSize = template.SizingOption == 0
+                ? template.CellSize
+                : template.DesiredCellSize;
+
+            if (cellSize <= 0f)
+            {
+                cellSize = template.CellSize;
+            }
+
+            return Mathf.Max(0.01f, cellSize);
         }
 
         private static float CalculateYawFromFloorRotation(Quaternion floorRotation)
