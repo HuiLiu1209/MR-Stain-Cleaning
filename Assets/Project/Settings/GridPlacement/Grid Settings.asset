@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: Grid Settings
   m_EditorClassIdentifier: Assembly-CSharp::Hypertonic.GridPlacement.GridSettings
   Key: MRStainFloorGrid
-  Width: 10
-  Height: 10
+  Width: 5
+  Height: 5
   GridSizeRatio: {x: 1, y: 1}
   AmountOfCellsX: 10
   AmountOfCellsY: 10
-  DesiredCellSize: 1
+  DesiredCellSize: 0.25
   GridPosition: {x: 0, y: 0.001, z: 0}
   GridRotation: 0
   ParentToGrid: 1
